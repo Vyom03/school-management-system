@@ -32,6 +32,11 @@ class Enrollment extends Model
         return $this->hasMany(Grade::class);
     }
 
+    public function attendances(): HasMany
+    {
+        return $this->hasMany(Attendance::class);
+    }
+
     public function averageGrade()
     {
         $grades = $this->grades;
@@ -63,5 +68,26 @@ class Enrollment extends Model
         if ($average >= 70) return 'C';
         if ($average >= 60) return 'D';
         return 'F';
+    }
+
+    public function attendancePercentage()
+    {
+        $total = $this->attendances()->count();
+        if ($total === 0) return 0;
+        
+        $present = $this->attendances()->whereIn('status', ['present', 'late'])->count();
+        return ($present / $total) * 100;
+    }
+
+    public function attendanceStats()
+    {
+        return [
+            'total' => $this->attendances()->count(),
+            'present' => $this->attendances()->where('status', 'present')->count(),
+            'absent' => $this->attendances()->where('status', 'absent')->count(),
+            'late' => $this->attendances()->where('status', 'late')->count(),
+            'excused' => $this->attendances()->where('status', 'excused')->count(),
+            'percentage' => round($this->attendancePercentage(), 2),
+        ];
     }
 }

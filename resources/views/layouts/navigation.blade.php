@@ -20,6 +20,9 @@
                         <x-nav-link :href="route('teacher.gradebook.index')" :active="request()->routeIs('teacher.gradebook.*')">
                             {{ __('Gradebook') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('teacher.attendance.index')" :active="request()->routeIs('teacher.attendance.*')">
+                            {{ __('Attendance') }}
+                        </x-nav-link>
                     @endif
                     
                     @if(Auth::user()->hasAnyRole(['admin', 'teacher']))
@@ -28,9 +31,18 @@
                         </x-nav-link>
                     @endif
                     
+                    @if(Auth::user()->hasRole('admin'))
+                        <x-nav-link :href="route('admin.attendance.index')" :active="request()->routeIs('admin.attendance.*')">
+                            {{ __('Attendance') }}
+                        </x-nav-link>
+                    @endif
+                    
                     @if(Auth::user()->hasRole('student'))
                         <x-nav-link :href="route('student.grades.index')" :active="request()->routeIs('student.grades.*')">
                             {{ __('My Grades') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('student.attendance.index')" :active="request()->routeIs('student.attendance.*')">
+                            {{ __('Attendance') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -93,6 +105,9 @@
                 <x-responsive-nav-link :href="route('teacher.gradebook.index')" :active="request()->routeIs('teacher.gradebook.*')">
                     {{ __('Gradebook') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('teacher.attendance.index')" :active="request()->routeIs('teacher.attendance.*')">
+                    {{ __('Attendance') }}
+                </x-responsive-nav-link>
             @endif
             
             @if(Auth::user()->hasAnyRole(['admin', 'teacher']))
@@ -101,9 +116,18 @@
                 </x-responsive-nav-link>
             @endif
             
+            @if(Auth::user()->hasRole('admin'))
+                <x-responsive-nav-link :href="route('admin.attendance.index')" :active="request()->routeIs('admin.attendance.*')">
+                    {{ __('Attendance') }}
+                </x-responsive-nav-link>
+            @endif
+            
             @if(Auth::user()->hasRole('student'))
                 <x-responsive-nav-link :href="route('student.grades.index')" :active="request()->routeIs('student.grades.*')">
                     {{ __('My Grades') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('student.attendance.index')" :active="request()->routeIs('student.attendance.*')">
+                    {{ __('Attendance') }}
                 </x-responsive-nav-link>
             @endif
         </div>

@@ -40,15 +40,19 @@
                             <h4 class="font-semibold text-gray-900 dark:text-gray-100">Manage Students</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">View, import, and export student data</p>
                         </a>
-                        <a href="#" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <a href="{{ route('admin.attendance.index') }}" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Attendance</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">View attendance records across all courses</p>
+                        </a>
+                        <a href="{{ route('admin.courses.index') }}" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                             <h4 class="font-semibold text-gray-900 dark:text-gray-100">Manage Courses</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create and manage courses and curricula</p>
                         </a>
-                        <a href="#" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <a href="{{ route('admin.reports.index') }}" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                             <h4 class="font-semibold text-gray-900 dark:text-gray-100">View Reports</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Access comprehensive system reports</p>
                         </a>
-                        <a href="#" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                        <a href="{{ route('admin.settings') }}" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                             <h4 class="font-semibold text-gray-900 dark:text-gray-100">System Settings</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Configure school-wide settings</p>
                         </a>

@@ -53,9 +53,21 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         return 'Manage Users - Admin Only';
     })->name('users');
     
-    Route::get('/settings', function () {
-        return 'System Settings - Admin Only';
-    })->name('settings');
+    // Courses management
+    Route::resource('courses', App\Http\Controllers\Admin\CoursesController::class);
+    
+    // Reports
+    Route::get('/reports', [App\Http\Controllers\Admin\ReportsController::class, 'index'])->name('reports.index');
+    Route::get('/reports/attendance', [App\Http\Controllers\Admin\ReportsController::class, 'attendance'])->name('reports.attendance');
+    Route::get('/reports/grades', [App\Http\Controllers\Admin\ReportsController::class, 'grades'])->name('reports.grades');
+    
+    // Settings
+    Route::view('/settings', 'admin.settings.index')->name('settings');
+    
+    // Attendance routes
+    Route::get('/attendance', [App\Http\Controllers\Admin\AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/course/{course}', [App\Http\Controllers\Admin\AttendanceController::class, 'show'])->name('attendance.show');
+    Route::get('/attendance/student/{student}', [App\Http\Controllers\Admin\AttendanceController::class, 'studentReport'])->name('attendance.student');
 });
 
 // Teacher routes
@@ -64,11 +76,17 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->name('teacher.')
     Route::get('/gradebook/{course}', [App\Http\Controllers\Teacher\GradebookController::class, 'show'])->name('gradebook.show');
     Route::post('/gradebook/enrollment/{enrollment}/grade', [App\Http\Controllers\Teacher\GradebookController::class, 'storeGrade'])->name('gradebook.store');
     Route::patch('/gradebook/grade/{grade}', [App\Http\Controllers\Teacher\GradebookController::class, 'updateGrade'])->name('gradebook.update');
+    
+    // Attendance routes
+    Route::get('/attendance', [App\Http\Controllers\Teacher\AttendanceController::class, 'index'])->name('attendance.index');
+    Route::get('/attendance/{course}', [App\Http\Controllers\Teacher\AttendanceController::class, 'show'])->name('attendance.show');
+    Route::post('/attendance/{course}', [App\Http\Controllers\Teacher\AttendanceController::class, 'store'])->name('attendance.store');
 });
 
 // Student routes
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/grades', [App\Http\Controllers\Student\GradesController::class, 'index'])->name('grades.index');
+    Route::get('/attendance', [App\Http\Controllers\Student\AttendanceController::class, 'index'])->name('attendance.index');
 });
 
 require __DIR__.'/auth.php';

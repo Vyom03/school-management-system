@@ -51,6 +51,10 @@
                             <h4 class="font-semibold text-gray-900 dark:text-gray-100">Grades</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Check your current grades</p>
                         </a>
+                        <a href="{{ route('student.attendance.index') }}" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Attendance</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">View your attendance records</p>
+                        </a>
                         <a href="#" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                             <h4 class="font-semibold text-gray-900 dark:text-gray-100">Schedule</h4>
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">View your class schedule</p>
