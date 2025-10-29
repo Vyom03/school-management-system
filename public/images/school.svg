@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#7C4DFF" />
+      <stop offset="1" stop-color="#4F46E5" />
+    </linearGradient>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+  <rect width="1200" height="800" fill="#eef2ff" />
+  <g transform="translate(100,120)">
+  <rect x="0" y="200" width="900" height="420" rx="20" fill="url(#g)" filter="url(#ds)" />
+    <rect x="60" y="260" width="200" height="120" rx="8" fill="#fff" />
+    <rect x="300" y="260" width="200" height="120" rx="8" fill="#fff" />
+    <rect x="540" y="260" width="200" height="120" rx="8" fill="#fff" />
+    <rect x="160" y="360" width="120" height="220" rx="8" fill="#fff" />
+    <circle cx="820" cy="320" r="80" fill="#7C4DFF" opacity="0.9" />
+    <path d="M30 200 L450 40 L870 200" fill="#4F46E5" opacity="0.95" />
+  <text x="460" y="160" font-size="48" fill="#ffffff" font-weight="700" font-family="Arial, Helvetica, sans-serif">Tripada Day School</text>
+  </g>
+</svg>

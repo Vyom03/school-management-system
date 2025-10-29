@@ -1,0 +1,49 @@
+:root{
+  --brand-500: #6D28D9; /* vibrant indigo */
+  --brand-600: #5B21B6;
+  --accent-500: #F97316; /* orange accent */
+  --muted-700: #334155;
+}
+
+/* page background and typographic improvements */
+body{
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  color: var(--muted-700);
+}
+
+header h1{ color: var(--brand-600); }
+header p{ color: #475569; }
+
+.btn-primary{
+  display:inline-block;
+  padding:0.7rem 1.25rem;
+  background:linear-gradient(90deg,var(--brand-500),var(--brand-600));
+  color:#fff !important;
+  border-radius:0.6rem;
+  box-shadow:0 8px 20px rgba(109,40,217,0.15);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.btn-primary:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(109,40,217,0.2); }
+
+.btn-secondary{
+  display:inline-block;
+  padding:0.6rem 1.1rem;
+  border-radius:0.6rem;
+  border:2px solid rgba(15,23,42,0.06);
+  color:var(--muted-700) !important;
+  background:#fff;
+}
+
+nav a{ color: #334155; }
+nav a:hover{ color: var(--brand-600); }
+
+/* hero tweaks */
+.hero-card{ background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8)); }
+
+/* slightly larger, vibrant headings */
+h2{ color: #0f172a; }
+
+footer{ background:transparent; }
+
+/* responsive tweak for the SVG image to keep it crisp */
+.hero-image img{ filter: saturate(1.05) contrast(1.05); }
