@@ -57,8 +57,8 @@
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Configure school-wide settings</p>
                         </a>
                         <a href="{{ route('admin.announcements.index') }}" class="block p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Announcements</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create and manage school announcements</p>
+                            <h4 class="font-semibold text-gray-900 dark:text-gray-100">Manage Announcements</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create, edit, and publish announcements</p>
                         </a>
                     </div>
                 </div>
