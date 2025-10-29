@@ -34,6 +34,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Announcements (all authenticated users)
+    Route::get('/announcements', [App\Http\Controllers\AnnouncementsController::class, 'index'])->name('announcements.index');
+    Route::get('/announcements/{announcement}', [App\Http\Controllers\AnnouncementsController::class, 'show'])->name('announcements.show');
 });
 
 // Students management (Teacher and Admin)
@@ -68,6 +72,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/attendance', [App\Http\Controllers\Admin\AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/course/{course}', [App\Http\Controllers\Admin\AttendanceController::class, 'show'])->name('attendance.show');
     Route::get('/attendance/student/{student}', [App\Http\Controllers\Admin\AttendanceController::class, 'studentReport'])->name('attendance.student');
+    
+    // Announcements management
+    Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementsController::class);
 });
 
 // Teacher routes
