@@ -81,50 +81,54 @@
                                         </div>
 
                                         <!-- Status Buttons (Large for Mobile) -->
-                                        <div class="grid grid-cols-2 gap-2 mb-3">
-                                            <label class="flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition
-                                                {{ $currentStatus === 'present' ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-gray-600' }}">
+                                        <div class="grid grid-cols-2 gap-2 mb-3" data-radio-group="attendance-{{ $enrollment->id }}">
+                                            <label class="attendance-btn flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition select-none active:scale-95
+                                                {{ $currentStatus === 'present' ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-gray-300 dark:border-gray-600' }}"
+                                                   data-status="present">
                                                 <input type="radio" 
                                                        name="attendance[{{ $enrollment->id }}]" 
                                                        value="present"
                                                        {{ $currentStatus === 'present' ? 'checked' : '' }}
-                                                       class="sr-only">
-                                                <span class="text-lg font-medium {{ $currentStatus === 'present' ? 'text-green-700 dark:text-green-300' : 'text-gray-700 dark:text-gray-300' }}">
+                                                       class="hidden">
+                                                <span class="text-lg font-medium pointer-events-none {{ $currentStatus === 'present' ? 'text-green-700 dark:text-green-300' : 'text-gray-700 dark:text-gray-300' }}">
                                                     ✓ Present
                                                 </span>
                                             </label>
-                                            <label class="flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition
-                                                {{ $currentStatus === 'absent' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-gray-600' }}">
+                                            <label class="attendance-btn flex items-center justify-center p-3 border-2 rounded-lg cursor-pointer transition select-none active:scale-95
+                                                {{ $currentStatus === 'absent' ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-gray-600' }}"
+                                                   data-status="absent">
                                                 <input type="radio" 
                                                        name="attendance[{{ $enrollment->id }}]" 
                                                        value="absent"
                                                        {{ $currentStatus === 'absent' ? 'checked' : '' }}
-                                                       class="sr-only">
-                                                <span class="text-lg font-medium {{ $currentStatus === 'absent' ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300' }}">
+                                                       class="hidden">
+                                                <span class="text-lg font-medium pointer-events-none {{ $currentStatus === 'absent' ? 'text-red-700 dark:text-red-300' : 'text-gray-700 dark:text-gray-300' }}">
                                                     ✗ Absent
                                                 </span>
                                             </label>
                                         </div>
 
                                         <!-- Other Options -->
-                                        <div class="grid grid-cols-2 gap-2 mb-3">
-                                            <label class="flex items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition text-sm
-                                                {{ $currentStatus === 'late' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}">
+                                        <div class="grid grid-cols-2 gap-2 mb-3" data-radio-group="attendance-{{ $enrollment->id }}">
+                                            <label class="attendance-btn flex items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition text-sm select-none active:scale-95
+                                                {{ $currentStatus === 'late' ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}"
+                                                   data-status="late">
                                                 <input type="radio" 
                                                        name="attendance[{{ $enrollment->id }}]" 
                                                        value="late"
                                                        {{ $currentStatus === 'late' ? 'checked' : '' }}
-                                                       class="sr-only">
-                                                <span class="font-medium">⏰ Late</span>
+                                                       class="hidden">
+                                                <span class="font-medium pointer-events-none">⏰ Late</span>
                                             </label>
-                                            <label class="flex items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition text-sm
-                                                {{ $currentStatus === 'excused' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}">
+                                            <label class="attendance-btn flex items-center justify-center p-2 border-2 rounded-lg cursor-pointer transition text-sm select-none active:scale-95
+                                                {{ $currentStatus === 'excused' ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300' }}"
+                                                   data-status="excused">
                                                 <input type="radio" 
                                                        name="attendance[{{ $enrollment->id }}]" 
                                                        value="excused"
                                                        {{ $currentStatus === 'excused' ? 'checked' : '' }}
-                                                       class="sr-only">
-                                                <span class="font-medium">📋 Excused</span>
+                                                       class="hidden">
+                                                <span class="font-medium pointer-events-none">📋 Excused</span>
                                             </label>
                                         </div>
 
@@ -231,4 +235,85 @@
         </div>
     </div>
 </x-app-layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle attendance button clicks with better touch support
+    const attendanceBtns = document.querySelectorAll('.attendance-btn');
+    
+    attendanceBtns.forEach(btn => {
+        // Use both click and touchstart for better mobile support
+        btn.addEventListener('click', function(e) {
+            handleAttendanceClick(this);
+        });
+        
+        btn.addEventListener('touchstart', function(e) {
+            // Prevent double-firing on mobile
+            e.preventDefault();
+            handleAttendanceClick(this);
+            // Trigger the click to check the radio
+            this.click();
+        }, { passive: false });
+    });
+    
+    function handleAttendanceClick(label) {
+        const radioInput = label.querySelector('input[type="radio"]');
+        const status = label.dataset.status;
+        const radioGroup = label.closest('[data-radio-group]');
+        
+        // Check the radio button
+        radioInput.checked = true;
+        
+        // Update visual state for all buttons in this group
+        if (radioGroup) {
+            const allBtns = radioGroup.querySelectorAll('.attendance-btn');
+            allBtns.forEach(btn => {
+                const btnStatus = btn.dataset.status;
+                const btnSpan = btn.querySelector('span');
+                
+                // Remove all status classes
+                btn.classList.remove(
+                    'border-green-500', 'bg-green-50', 'dark:bg-green-900/20',
+                    'border-red-500', 'bg-red-50', 'dark:bg-red-900/20',
+                    'border-yellow-500', 'bg-yellow-50', 'dark:bg-yellow-900/20',
+                    'border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20'
+                );
+                btn.classList.add('border-gray-300', 'dark:border-gray-600');
+                
+                btnSpan.classList.remove(
+                    'text-green-700', 'dark:text-green-300',
+                    'text-red-700', 'dark:text-red-300',
+                    'text-yellow-700', 'dark:text-yellow-300',
+                    'text-blue-700', 'dark:text-blue-300'
+                );
+                btnSpan.classList.add('text-gray-700', 'dark:text-gray-300');
+            });
+            
+            // Add active classes to selected button
+            label.classList.remove('border-gray-300', 'dark:border-gray-600');
+            const labelSpan = label.querySelector('span');
+            labelSpan.classList.remove('text-gray-700', 'dark:text-gray-300');
+            
+            switch(status) {
+                case 'present':
+                    label.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20');
+                    labelSpan.classList.add('text-green-700', 'dark:text-green-300');
+                    break;
+                case 'absent':
+                    label.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-900/20');
+                    labelSpan.classList.add('text-red-700', 'dark:text-red-300');
+                    break;
+                case 'late':
+                    label.classList.add('border-yellow-500', 'bg-yellow-50', 'dark:bg-yellow-900/20');
+                    labelSpan.classList.add('text-yellow-700', 'dark:text-yellow-300');
+                    break;
+                case 'excused':
+                    label.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+                    labelSpan.classList.add('text-blue-700', 'dark:text-blue-300');
+                    break;
+            }
+        }
+    }
+});
+</script>
 
