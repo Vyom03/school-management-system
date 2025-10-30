@@ -27,6 +27,7 @@ class CoursesController extends Controller
             'code' => 'required|string|max:20|unique:courses,code',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'grade_level' => 'required|integer|between:1,12',
             'semester' => 'required|string|max:50',
             'teacher_id' => 'required|exists:users,id',
         ]);
@@ -48,6 +49,7 @@ class CoursesController extends Controller
             'code' => 'required|string|max:20|unique:courses,code,' . $course->id,
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'grade_level' => 'required|integer|between:1,12',
             'semester' => 'required|string|max:50',
             'teacher_id' => 'required|exists:users,id',
         ]);

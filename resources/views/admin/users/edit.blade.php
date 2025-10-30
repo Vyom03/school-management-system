@@ -58,6 +58,7 @@
                             <select name="role" 
                                     id="role" 
                                     required
+                                    onchange="toggleGradeField()"
                                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                 @foreach($roles as $role)
                                     <option value="{{ $role->name }}" 
@@ -67,6 +68,26 @@
                                 @endforeach
                             </select>
                             @error('role')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Grade Level (for Students only) -->
+                        <div id="grade_level_field" class="hidden">
+                            <label for="grade_level" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Grade Level <span class="text-red-500">*</span>
+                            </label>
+                            <select name="grade_level" 
+                                    id="grade_level" 
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <option value="">Select grade level...</option>
+                                @foreach(\App\Models\User::getAvailableGrades() as $level => $label)
+                                    <option value="{{ $level }}" {{ old('grade_level', $user->grade_level) == $level ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('grade_level')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
@@ -126,5 +147,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleGradeField() {
+            const roleSelect = document.getElementById('role');
+            const gradeField = document.getElementById('grade_level_field');
+            const gradeSelect = document.getElementById('grade_level');
+            
+            if (roleSelect.value === 'student') {
+                gradeField.classList.remove('hidden');
+                gradeSelect.required = true;
+            } else {
+                gradeField.classList.add('hidden');
+                gradeSelect.required = false;
+            }
+        }
+
+        // Run on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleGradeField();
+        });
+    </script>
 </x-app-layout>
 
