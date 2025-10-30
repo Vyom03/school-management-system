@@ -15,15 +15,32 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+            <!-- Logo Container with Background -->
+            <div class="mb-8">
+                <a href="/" class="flex flex-col items-center group">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                        <x-application-logo class="w-20 h-20 fill-current text-indigo-600 dark:text-indigo-400" />
+                    </div>
+                    <h1 class="mt-4 text-2xl font-bold text-gray-800 dark:text-gray-100">School Management</h1>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Welcome Back</p>
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+            <!-- Login Card -->
+            <div class="w-full sm:max-w-md">
+                <div class="bg-white dark:bg-gray-800 shadow-2xl rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-700">
+                    <div class="px-8 py-8">
+                        {{ $slot }}
+                    </div>
+                    
+                    <!-- Footer -->
+                    <div class="px-8 py-4 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700">
+                        <p class="text-xs text-center text-gray-600 dark:text-gray-400">
+                            &copy; {{ date('Y') }} School Management System. All rights reserved.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
