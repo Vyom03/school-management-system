@@ -3,7 +3,6 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Controllers\SitemapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +15,13 @@ use App\Http\Controllers\SitemapController;
 |
 */
 
+// Redirect root to login or dashboard based on auth status
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
 });
-
-// Public site pages
-Route::view('/about', 'pages.about')->name('about');
-Route::view('/admissions', 'pages.admissions')->name('admissions');
-Route::view('/academics', 'pages.academics')->name('academics');
-Route::view('/contact', 'pages.contact')->name('contact');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -121,6 +118,3 @@ if (app()->environment('local')) {
         return $html;
     });
 }
-
-// Sitemap
-Route::get('/sitemap.xml', SitemapController::class);

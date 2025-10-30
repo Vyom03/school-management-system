@@ -18,13 +18,13 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
             <!-- Logo Container with Background -->
             <div class="mb-8">
-                <a href="/" class="flex flex-col items-center group">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                <div class="flex flex-col items-center">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
                         <x-application-logo class="w-20 h-20 fill-current text-indigo-600 dark:text-indigo-400" />
                     </div>
-                    <h1 class="mt-4 text-2xl font-bold text-gray-800 dark:text-gray-100">School Management</h1>
+                    <h1 class="mt-4 text-2xl font-bold text-gray-800 dark:text-gray-100">School Management System</h1>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Welcome Back</p>
-                </a>
+                </div>
             </div>
 
             <!-- Login Card -->
