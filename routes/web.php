@@ -52,9 +52,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 // Admin-only routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/users', function () {
-        return 'Manage Users - Admin Only';
-    })->name('users');
+    // User management
+    Route::resource('users', App\Http\Controllers\Admin\UsersController::class);
+    Route::post('/users/bulk-delete', [App\Http\Controllers\Admin\UsersController::class, 'bulkDelete'])->name('users.bulk-delete');
     
     // Courses management
     Route::resource('courses', App\Http\Controllers\Admin\CoursesController::class);
