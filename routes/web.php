@@ -44,11 +44,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role_or_permission:admin|teacher'])->group(function () {
     Route::get('/students', [App\Http\Controllers\StudentsController::class, 'index'])->name('students.index');
     Route::get('/students/export', [App\Http\Controllers\StudentsController::class, 'export'])->name('students.export');
+    Route::delete('/students/{student}', [App\Http\Controllers\StudentsController::class, 'destroy'])->name('students.destroy');
 });
 
-// CSV Import (Admin only)
+// CSV Import and Bulk Delete (Admin only)
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/students/import', [App\Http\Controllers\StudentsController::class, 'import'])->name('students.import');
+    Route::post('/students/bulk-delete', [App\Http\Controllers\StudentsController::class, 'bulkDelete'])->name('students.bulk-delete');
 });
 
 // Admin-only routes

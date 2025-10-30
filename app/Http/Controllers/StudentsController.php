@@ -138,4 +138,52 @@ class StudentsController extends Controller
             'import_errors' => $errors,
         ]);
     }
+
+    public function destroy(User $student)
+    {
+        // Check if user has student role
+        if (!$student->hasRole('student')) {
+            return back()->with('error', 'User is not a student.');
+        }
+
+        // Teachers and Admins can delete
+        if (!auth()->user()->hasAnyRole(['admin', 'teacher'])) {
+            abort(403, 'Unauthorized');
+        }
+
+        $name = $student->name;
+        
+        // Delete the student (cascading deletes will handle enrollments, grades, attendance)
+        $student->delete();
+
+        return back()->with('success', "Student '$name' has been deleted successfully.");
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        // Only admins can bulk delete
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $request->validate([
+            'student_ids' => 'required|array|min:1',
+            'student_ids.*' => 'exists:users,id',
+        ]);
+
+        $studentIds = $request->input('student_ids');
+        
+        // Get students and verify they are all students
+        $students = User::whereIn('id', $studentIds)->get();
+        
+        $deleted = 0;
+        foreach ($students as $student) {
+            if ($student->hasRole('student')) {
+                $student->delete();
+                $deleted++;
+            }
+        }
+
+        return back()->with('success', "$deleted student(s) deleted successfully.");
+    }
 }
