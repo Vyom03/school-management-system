@@ -46,6 +46,23 @@
                         </div>
 
                         <div class="mb-4">
+                            <label for="grade_level" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Grade Level *</label>
+                            <select name="grade_level" id="grade_level" required
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                <option value="">Select grade level...</option>
+                                @foreach(\App\Models\User::getAvailableGrades() as $level => $label)
+                                    <option value="{{ $level }}" {{ old('grade_level', $course->grade_level) == $level ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('grade_level')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-1 text-xs text-gray-500">This course will be available to students in this grade level.</p>
+                        </div>
+
+                        <div class="mb-4">
                             <label for="semester" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Semester *</label>
                             <input type="text" name="semester" id="semester" value="{{ old('semester', $course->semester) }}" required
                                    placeholder="e.g., Fall 2025"
@@ -69,6 +86,7 @@
                             @error('teacher_id')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                            <p class="mt-1 text-xs text-gray-500">This teacher will be assigned to teach this specific course.</p>
                         </div>
 
                         <div class="flex justify-end space-x-3">
