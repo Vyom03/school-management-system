@@ -15,6 +15,7 @@ class Course extends Model
         'name',
         'code',
         'description',
+        'grade_level',
         'teacher_id',
         'semester',
         'credits',
@@ -35,5 +36,29 @@ class Course extends Model
         return $this->belongsToMany(User::class, 'enrollments', 'course_id', 'student_id')
             ->withPivot('status')
             ->withTimestamps();
+    }
+
+    /**
+     * Get the grade level label
+     */
+    public function getGradeLevelLabelAttribute()
+    {
+        return $this->grade_level ? "Grade {$this->grade_level}" : 'All Grades';
+    }
+
+    /**
+     * Scope to filter by grade level
+     */
+    public function scopeForGrade($query, $gradeLevel)
+    {
+        return $query->where('grade_level', $gradeLevel);
+    }
+
+    /**
+     * Scope to filter by teacher
+     */
+    public function scopeForTeacher($query, $teacherId)
+    {
+        return $query->where('teacher_id', $teacherId);
     }
 }

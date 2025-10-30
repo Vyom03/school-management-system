@@ -44,18 +44,26 @@ class UsersController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|exists:roles,name',
-        ]);
+        ];
+
+        // If student, grade level is required
+        if ($request->role === 'student') {
+            $rules['grade_level'] = 'required|integer|between:1,12';
+        }
+
+        $request->validate($rules);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'email_verified_at' => now(),
+            'grade_level' => $request->role === 'student' ? $request->grade_level : null,
         ]);
 
         $user->assignRole($request->role);
@@ -72,16 +80,24 @@ class UsersController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|exists:roles,name',
-        ]);
+        ];
+
+        // If student, grade level is required
+        if ($request->role === 'student') {
+            $rules['grade_level'] = 'required|integer|between:1,12';
+        }
+
+        $request->validate($rules);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'grade_level' => $request->role === 'student' ? $request->grade_level : null,
         ]);
 
         if ($request->filled('password')) {
