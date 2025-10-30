@@ -166,6 +166,7 @@
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Grade</th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enrolled Courses</th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Joined</th>
                                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -187,6 +188,15 @@
                                                         {{ $student->email }}
                                                     </td>
                                                     <td class="px-6 py-4 whitespace-nowrap">
+                                                        @if($student->grade_level)
+                                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                                                Grade {{ $student->grade_level }}
+                                                            </span>
+                                                        @else
+                                                            <span class="text-gray-400 text-xs">Not Assigned</span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">
                                                         <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                                             {{ $student->enrollments_count }} {{ Str::plural('course', $student->enrollments_count) }}
                                                         </span>
@@ -194,7 +204,12 @@
                                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                         {{ $student->created_at->format('M d, Y') }}
                                                     </td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                                        @role('admin')
+                                                            <a href="{{ route('admin.users.edit', $student) }}" class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400">
+                                                                Edit
+                                                            </a>
+                                                        @endrole
                                                         <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline" onsubmit="return confirm('Delete student {{ $student->name }}? This will also delete their enrollments, grades, and attendance records.');">
                                                             @csrf
                                                             @method('DELETE')
@@ -216,6 +231,7 @@
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">ID</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Grade</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Enrolled Courses</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Joined</th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
@@ -232,6 +248,15 @@
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                                                     {{ $student->email }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap">
+                                                    @if($student->grade_level)
+                                                        <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                                            Grade {{ $student->grade_level }}
+                                                        </span>
+                                                    @else
+                                                        <span class="text-gray-400 text-xs">Not Assigned</span>
+                                                    @endif
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
