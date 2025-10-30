@@ -31,8 +31,8 @@
 
             <!-- Search Bar -->
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <form method="GET" action="{{ route('teacher.gradebook.show', $course) }}" class="flex gap-4">
+                <div class="p-4 sm:p-6">
+                    <form method="GET" action="{{ route('teacher.gradebook.show', $course) }}" class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                         <div class="flex-1">
                             <label for="search" class="sr-only">Search students</label>
                             <div class="relative">
@@ -45,18 +45,20 @@
                                        name="search" 
                                        id="search" 
                                        value="{{ $search ?? '' }}"
-                                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md leading-5 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
-                                       placeholder="Search students by name or email...">
+                                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 rounded-md leading-5 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base" 
+                                       placeholder="Search students...">
                             </div>
                         </div>
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">
-                            Search
-                        </button>
-                        @if($search)
-                            <a href="{{ route('teacher.gradebook.show', $course) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md">
-                                Clear
-                            </a>
-                        @endif
+                        <div class="flex gap-2">
+                            <button type="submit" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md">
+                                Search
+                            </button>
+                            @if($search)
+                                <a href="{{ route('teacher.gradebook.show', $course) }}" class="flex-1 sm:flex-none bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md text-center">
+                                    Clear
+                                </a>
+                            @endif
+                        </div>
                     </form>
                 </div>
             </div>
@@ -135,7 +137,41 @@
 
                                     <!-- Existing Grades -->
                                     @if($enrollment->grades->count() > 0)
-                                        <div class="overflow-x-auto">
+                                        <!-- Mobile Card View -->
+                                        <div class="md:hidden space-y-3">
+                                            @foreach($enrollment->grades as $grade)
+                                                <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                                    <div class="flex justify-between items-start mb-2">
+                                                        <h5 class="font-semibold text-gray-900 dark:text-gray-100 text-sm">{{ $grade->assignment_name }}</h5>
+                                                        <span class="px-2 py-1 rounded text-xs font-semibold
+                                                            {{ $grade->letter_grade == 'A' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
+                                                            {{ $grade->letter_grade == 'B' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}
+                                                            {{ $grade->letter_grade == 'C' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
+                                                            {{ $grade->letter_grade == 'D' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' : '' }}
+                                                            {{ $grade->letter_grade == 'F' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}">
+                                                            {{ $grade->letter_grade }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="grid grid-cols-2 gap-2 text-sm">
+                                                        <div>
+                                                            <span class="text-gray-600 dark:text-gray-400">Score:</span>
+                                                            <span class="font-medium text-gray-900 dark:text-gray-100 ml-1">{{ $grade->score }}/{{ $grade->max_score }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-gray-600 dark:text-gray-400">Percentage:</span>
+                                                            <span class="font-medium text-gray-900 dark:text-gray-100 ml-1">{{ number_format($grade->percentage, 1) }}%</span>
+                                                        </div>
+                                                    </div>
+                                                    @if($grade->comments)
+                                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-2">💬 {{ $grade->comments }}</p>
+                                                    @endif
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ $grade->created_at->format('M d, Y') }}</p>
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <!-- Desktop Table View -->
+                                        <div class="hidden md:block overflow-x-auto">
                                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                                 <thead class="bg-gray-50 dark:bg-gray-900">
                                                     <tr>
