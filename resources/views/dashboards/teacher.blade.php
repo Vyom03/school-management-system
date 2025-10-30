@@ -16,21 +16,26 @@
             </div>
 
             <!-- Quick Stats -->
+            @php
+                $myCourses = \App\Models\Course::where('teacher_id', Auth::id())->get();
+                $myStudentsCount = \App\Models\Enrollment::whereIn('course_id', $myCourses->pluck('id'))->distinct('student_id')->count('student_id');
+                $totalEnrollments = \App\Models\Enrollment::whereIn('course_id', $myCourses->pluck('id'))->count();
+            @endphp
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-purple-50 dark:bg-purple-900 p-6 rounded-lg shadow">
                     <h4 class="text-sm font-medium text-purple-800 dark:text-purple-200">My Courses</h4>
-                    <p class="mt-2 text-3xl font-bold text-purple-900 dark:text-purple-100">0</p>
+                    <p class="mt-2 text-3xl font-bold text-purple-900 dark:text-purple-100">{{ $myCourses->count() }}</p>
                     <p class="text-xs text-purple-600 dark:text-purple-300 mt-1">Active courses</p>
                 </div>
                 <div class="bg-blue-50 dark:bg-blue-900 p-6 rounded-lg shadow">
-                    <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200">Students</h4>
-                    <p class="mt-2 text-3xl font-bold text-blue-900 dark:text-blue-100">{{ \App\Models\User::role('student')->count() }}</p>
-                    <p class="text-xs text-blue-600 dark:text-blue-300 mt-1">Total students</p>
+                    <h4 class="text-sm font-medium text-blue-800 dark:text-blue-200">My Students</h4>
+                    <p class="mt-2 text-3xl font-bold text-blue-900 dark:text-blue-100">{{ $myStudentsCount }}</p>
+                    <p class="text-xs text-blue-600 dark:text-blue-300 mt-1">Enrolled in my courses</p>
                 </div>
                 <div class="bg-orange-50 dark:bg-orange-900 p-6 rounded-lg shadow">
-                    <h4 class="text-sm font-medium text-orange-800 dark:text-orange-200">Pending Grading</h4>
-                    <p class="mt-2 text-3xl font-bold text-orange-900 dark:text-orange-100">0</p>
-                    <p class="text-xs text-orange-600 dark:text-orange-300 mt-1">Assignments to grade</p>
+                    <h4 class="text-sm font-medium text-orange-800 dark:text-orange-200">Total Enrollments</h4>
+                    <p class="mt-2 text-3xl font-bold text-orange-900 dark:text-orange-100">{{ $totalEnrollments }}</p>
+                    <p class="text-xs text-orange-600 dark:text-orange-300 mt-1">Student enrollments</p>
                 </div>
             </div>
 
@@ -60,10 +65,49 @@
             </div>
 
             <!-- Recent Activity -->
+            @php
+                $recentAttendance = \App\Models\Attendance::whereHas('enrollment.course', function($q) {
+                    $q->where('teacher_id', Auth::id());
+                })
+                ->with(['enrollment.student', 'enrollment.course'])
+                ->orderBy('created_at', 'desc')
+                ->limit(5)
+                ->get();
+            @endphp
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recent Activity</h3>
-                    <p class="text-gray-600 dark:text-gray-400">No recent activity to display.</p>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Recent Attendance Records</h3>
+                    @if($recentAttendance->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($recentAttendance as $attendance)
+                                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                            {{ $attendance->enrollment->student->name }}
+                                        </p>
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">
+                                            {{ $attendance->enrollment->course->name }} - {{ \Carbon\Carbon::parse($attendance->date)->format('M d, Y') }}
+                                        </p>
+                                    </div>
+                                    <span class="px-2 py-1 text-xs font-semibold rounded 
+                                        @if($attendance->status === 'present') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                        @elseif($attendance->status === 'absent') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                        @elseif($attendance->status === 'late') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                        @else bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                        @endif">
+                                        {{ ucfirst($attendance->status) }}
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mt-4">
+                            <a href="{{ route('teacher.attendance.index') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
+                                View all attendance records →
+                            </a>
+                        </div>
+                    @else
+                        <p class="text-gray-600 dark:text-gray-400">No attendance records yet. Start marking attendance for your students.</p>
+                    @endif
                 </div>
             </div>
         </div>
