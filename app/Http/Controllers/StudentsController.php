@@ -83,6 +83,7 @@ class StudentsController extends Controller
         
         $imported = 0;
         $errors = [];
+        $defaultPassword = 'student123'; // Default password for all imported students
         
         foreach ($data as $index => $row) {
             $rowNumber = $index + 2; // +2 because we removed header and arrays start at 0
@@ -117,7 +118,7 @@ class StudentsController extends Controller
                 $user = User::create([
                     'name' => $name,
                     'email' => $email,
-                    'password' => Hash::make('password'), // Default password
+                    'password' => Hash::make($defaultPassword),
                     'email_verified_at' => now(),
                 ]);
                 
@@ -128,9 +129,9 @@ class StudentsController extends Controller
             }
         }
         
-        $message = "$imported students imported successfully.";
+        $message = "$imported students imported successfully. Default password: '$defaultPassword'";
         if (count($errors) > 0) {
-            $message .= " " . count($errors) . " errors occurred.";
+            $message .= " | " . count($errors) . " errors occurred.";
         }
         
         return back()->with([

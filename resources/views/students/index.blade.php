@@ -83,28 +83,38 @@
 
                     <!-- Import Form (Hidden by default, Admin only) -->
                     @role('admin')
-                        <div id="importForm" class="hidden mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                        <div id="importForm" class="hidden mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border-2 border-purple-200 dark:border-purple-800">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Import Students from CSV</h3>
                             <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                                 @csrf
+                                <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                                    <h4 class="font-semibold text-blue-900 dark:text-blue-100 mb-2">📋 CSV Format Instructions:</h4>
+                                    <ul class="text-sm text-blue-800 dark:text-blue-200 space-y-1 list-disc list-inside">
+                                        <li>Required columns: <strong>Name, Email</strong></li>
+                                        <li>First row should contain headers (Name, Email)</li>
+                                        <li>Default password will be: <code class="bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded font-mono">student123</code></li>
+                                        <li>Students can change their password after first login</li>
+                                        <li>Sample file available: <code class="bg-blue-100 dark:bg-blue-800 px-2 py-1 rounded font-mono">sample_students_import.csv</code></li>
+                                    </ul>
+                                </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        CSV File Format: Name, Email (headers optional)
+                                        Select CSV File
                                     </label>
                                     <input type="file" 
                                            name="csv_file" 
                                            accept=".csv,.txt"
                                            required
-                                           class="block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none">
-                                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                        Upload a CSV file with columns: Name, Email. Default password will be "password".
+                                           class="block w-full text-sm text-gray-900 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 focus:outline-none p-2">
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        ✓ Accepts .csv and .txt files (max 2MB)
                                     </p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md">
+                                    <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md font-medium">
                                         Upload and Import
                                     </button>
-                                    <button type="button" onclick="toggleImport()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md">
+                                    <button type="button" onclick="toggleImport()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md">
                                         Cancel
                                     </button>
                                 </div>
