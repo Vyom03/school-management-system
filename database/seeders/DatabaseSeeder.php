@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             FeeStructureSeeder::class,
             FeeSeeder::class,
             PaymentSeeder::class,
+            ParentUserSeeder::class,
         ]);
     }
 }

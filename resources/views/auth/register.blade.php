@@ -93,7 +93,8 @@
     <!-- Info Notice -->
     <div class="mt-8 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-800">
         <p class="text-xs text-green-800 dark:text-green-200">
-            <strong>Note:</strong> New accounts are automatically assigned the Student role. Contact an administrator to change your role.
+            <strong>Note:</strong> This registration is for students, teachers, and staff only. 
+            Parents must register through the <a href="{{ route('parent.register') }}" class="font-medium underline">Parent Portal</a> with a registration code.
         </p>
     </div>
 </x-guest-layout>

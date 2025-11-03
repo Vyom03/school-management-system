@@ -45,6 +45,9 @@
                         <x-nav-link :href="route('admin.fees.index')" :active="request()->routeIs('admin.fees.*')">
                             {{ __('Fees') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.parent-codes.index')" :active="request()->routeIs('admin.parent-codes.*')">
+                            {{ __('Parent Codes') }}
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.assignments.index')" :active="request()->routeIs('admin.assignments.*')">
                             {{ __('Assignments') }}
                         </x-nav-link>
@@ -174,6 +177,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.fees.index')" :active="request()->routeIs('admin.fees.*')">
                     {{ __('Fees') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.parent-codes.index')" :active="request()->routeIs('admin.parent-codes.*')">
+                    {{ __('Parent Codes') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.assignments.index')" :active="request()->routeIs('admin.assignments.*')">
                     {{ __('Assignments') }}

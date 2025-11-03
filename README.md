@@ -11,7 +11,8 @@ A comprehensive school management system built with Laravel 10, featuring role-b
 ### 🔐 Authentication & Authorization
 - Secure user authentication with Laravel Breeze
 - Role-based access control using Spatie Permission
-- Three user roles: **Admin**, **Teacher**, and **Student**
+- Four user types: **Admin**, **Teacher**, **Student**, and **Parent**
+- Separate authentication system for Parent Portal
 - Role-specific dashboards and permissions
 - Email verification support
 
@@ -49,6 +50,13 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Pin important notices
   - Audience targeting (All, Students, Teachers)
   - Category system (General, Academic, Event, Urgent)
+- **Parent Portal Management**
+  - Generate parent registration codes for individual students
+  - Bulk generate registration codes for entire classes (Grade 1-12)
+  - Download bulk registration codes as PDF for easy distribution
+  - Manage parent-student relationships
+  - Track code usage and expiration dates
+  - Pre-approve email addresses for secure parent registration
 - **System Management**
   - Manage users and roles
   - Access to all system features
@@ -111,6 +119,22 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - See pinned notices
   - Filter by category
 
+### 👨‍👩‍👧‍👦 Parent Portal Features
+- **Secure Parent Authentication**
+  - Separate login system from school management
+  - Registration code verification system
+  - Admin-generated unique codes for authorized access
+  - Email verification for enhanced security
+- **Child Information Access**
+  - View all linked children in one dashboard
+  - Access comprehensive child information:
+    - Academic grades by course with averages
+    - Attendance records and percentages
+    - Fee information and payment history
+    - Recent school announcements
+  - Multi-child support - view information for all your children
+  - Automatic linking via registration codes
+
 ### 🌐 Public Website
 - Modern, responsive design
 - Public pages:
@@ -125,7 +149,8 @@ A comprehensive school management system built with Laravel 10, featuring role-b
 ## 🛠️ Technology Stack
 
 - **Backend**: Laravel 10.x
-- **Frontend**: Blade Templates, Tailwind CSS, Alpine.js
+- **Frontend**: Blade Templates, Tailwind CSS, Alpine.js, Vue.js 3
+- **Charts**: ApexCharts (for analytics dashboard)
 - **Database**: MySQL
 - **Authentication**: Laravel Breeze
 - **Permissions**: Spatie Laravel Permission
@@ -234,6 +259,16 @@ After running the seeders, you can log in with these credentials:
 | Student | student4@test.com | password |
 | Student | student5@test.com | password |
 
+### Parent Portal Credentials
+
+After generating parent registration codes, parents can register at `/parent/register` with their unique code:
+
+| Parent Account | Email | Password | Linked Student |
+|----------------|-------|----------|----------------|
+| Parent 1 | parent1@test.com | password | Student One |
+| Parent 2 | parent2@test.com | password | Student Two |
+| Parent 3 | parent3@test.com | password | Student Three, Student Four |
+
 ## 📊 Database Structure
 
 ### Key Tables
@@ -252,6 +287,9 @@ After running the seeders, you can log in with these credentials:
 - **assignments**: Course assignments with due dates and instructions
 - **submissions**: Student assignment submissions with content and files
 - **submission_files**: Uploaded files for assignments
+- **parent_users**: Parent accounts separate from school users
+- **parent_student**: Many-to-many relationship linking parents to their children
+- **parent_registration_codes**: Unique codes for parent registration with expiration dates
 
 ### Relationships
 - Users have many enrollments, fees, courses (as teacher), assignments (as teacher), and submissions (as student)
@@ -264,6 +302,9 @@ After running the seeders, you can log in with these credentials:
 - Fees belong to fee structures and students
 - Payments belong to fees
 - Submissions automatically create grades in the gradebook
+- Parents have many students (via parent_student pivot table)
+- Students have many parents (via parent_student pivot table)
+- Parent registration codes belong to students and admins
 
 ## 🎨 Features in Detail
 
@@ -347,8 +388,17 @@ php artisan test
 - Attendance reports with date range filtering
 - Grade reports by course or overall
 - Student academic transcripts
+- Parent registration codes bulk PDF generation
 - Professional PDF formatting with school branding
 - Improved pagination to prevent content splitting
+
+### Real-Time Analytics Dashboard
+- Interactive Vue.js-based analytics dashboard
+- Attendance trends over time with date range filtering
+- Grade distribution analysis
+- Course performance metrics
+- Attendance by course statistics
+- ApexCharts integration for beautiful visualizations
 
 ### Enhanced Announcements
 - Rich announcement system with categories

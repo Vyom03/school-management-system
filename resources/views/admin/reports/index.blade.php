@@ -57,6 +57,19 @@
                 </div>
             </div>
 
+            <!-- Real-Time Analytics Dashboard (Vue.js) -->
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">📊 Real-Time Analytics</h3>
+                    <div id="analytics-dashboard">
+                        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
+                            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <p class="mt-2">Loading analytics dashboard...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Recent Enrollments -->
             @if($recent_enrollments->count() > 0)
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -87,5 +100,9 @@
             @endif
         </div>
     </div>
+
+    @push('scripts')
+    @vite('resources/js/analytics.js')
+    @endpush
 </x-app-layout>
 

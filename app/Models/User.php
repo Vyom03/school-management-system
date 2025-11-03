@@ -139,4 +139,14 @@ class User extends Authenticatable
             12 => 'Grade 12',
         ];
     }
+
+    /**
+     * Get parents linked to this student
+     */
+    public function parents()
+    {
+        return $this->belongsToMany(ParentUser::class, 'parent_student', 'student_id', 'parent_user_id')
+                    ->withPivot('relationship', 'is_primary')
+                    ->withTimestamps();
+    }
 }

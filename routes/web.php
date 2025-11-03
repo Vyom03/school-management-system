@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Mail;
 
 // Redirect root to login or dashboard based on auth status
 Route::get('/', function () {
+    if (auth()->guard('parent')->check()) {
+        return redirect()->route('parent.dashboard');
+    }
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
@@ -65,11 +68,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('users', App\Http\Controllers\Admin\UsersController::class);
     Route::post('/users/bulk-delete', [App\Http\Controllers\Admin\UsersController::class, 'bulkDelete'])->name('users.bulk-delete');
     
+    // Parent registration codes
+    Route::resource('parent-codes', App\Http\Controllers\Admin\ParentRegistrationCodeController::class)->except(['show', 'edit', 'update']);
+    Route::get('/parent-codes/bulk/create', [App\Http\Controllers\Admin\ParentRegistrationCodeController::class, 'bulkCreate'])->name('parent-codes.bulk-create');
+    Route::post('/parent-codes/bulk', [App\Http\Controllers\Admin\ParentRegistrationCodeController::class, 'bulkStore'])->name('parent-codes.bulk-store');
+    
     // Courses management
     Route::resource('courses', App\Http\Controllers\Admin\CoursesController::class);
     
     // Reports
     Route::get('/reports', [App\Http\Controllers\Admin\ReportsController::class, 'index'])->name('reports.index');
+    Route::get('/reports/analytics', [App\Http\Controllers\Admin\ReportsController::class, 'analytics'])->name('reports.analytics');
     Route::get('/reports/attendance', [App\Http\Controllers\Admin\ReportsController::class, 'attendance'])->name('reports.attendance');
     Route::get('/reports/grades', [App\Http\Controllers\Admin\ReportsController::class, 'grades'])->name('reports.grades');
     Route::get('/reports/attendance/pdf', [App\Http\Controllers\Admin\ReportsController::class, 'attendancePdf'])->name('reports.attendance.pdf');
@@ -166,4 +175,18 @@ if (app()->environment('local')) {
         $html .= '</table><p><strong>Password for all:</strong> password</p>';
         return $html;
     });
+
+// Parent Portal Routes
+Route::middleware('guest:parent')->prefix('parent')->name('parent.')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Parent\Auth\ParentAuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Parent\Auth\ParentAuthenticatedSessionController::class, 'store']);
+    Route::get('/register', [App\Http\Controllers\Parent\Auth\ParentRegisteredUserController::class, 'create'])->name('register');
+    Route::post('/register', [App\Http\Controllers\Parent\Auth\ParentRegisteredUserController::class, 'store']);
+});
+
+Route::middleware('auth:parent')->prefix('parent')->name('parent.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Parent\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/student/{student}', [App\Http\Controllers\Parent\StudentController::class, 'show'])->name('student.show');
+    Route::post('/logout', [App\Http\Controllers\Parent\Auth\ParentAuthenticatedSessionController::class, 'destroy'])->name('logout');
+});
 }

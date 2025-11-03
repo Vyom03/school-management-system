@@ -40,6 +40,95 @@ class ReportsController extends Controller
         return view('admin.reports.index', compact('stats', 'recent_enrollments', 'recent_grades'));
     }
 
+    public function analytics(Request $request)
+    {
+        $startDate = $request->input('start_date', now()->subDays(30)->format('Y-m-d'));
+        $endDate = $request->input('end_date', now()->format('Y-m-d'));
+
+        // Attendance trends (last 30 days by default)
+        $attendanceTrends = [];
+        $currentDate = Carbon::parse($startDate);
+        while ($currentDate <= Carbon::parse($endDate)) {
+            $dateStr = $currentDate->format('Y-m-d');
+            $total = Attendance::whereDate('date', $dateStr)->count();
+            $present = Attendance::whereDate('date', $dateStr)->where('status', 'present')->count();
+            
+            $attendanceTrends[] = [
+                'date' => $currentDate->format('M d'),
+                'total' => $total,
+                'present' => $present,
+                'percentage' => $total > 0 ? round(($present / $total) * 100, 2) : 0,
+            ];
+            $currentDate->addDay();
+        }
+
+        // Grade distribution
+        $grades = Grade::with('enrollment')
+            ->whereBetween('created_at', [$startDate, $endDate . ' 23:59:59'])
+            ->get();
+
+        $gradeDistribution = [
+            'A' => 0,
+            'B' => 0,
+            'C' => 0,
+            'D' => 0,
+            'F' => 0,
+        ];
+
+        foreach ($grades as $grade) {
+            $percentage = $grade->enrollment->averageGrade();
+            if ($percentage >= 90) $gradeDistribution['A']++;
+            elseif ($percentage >= 80) $gradeDistribution['B']++;
+            elseif ($percentage >= 70) $gradeDistribution['C']++;
+            elseif ($percentage >= 60) $gradeDistribution['D']++;
+            else $gradeDistribution['F']++;
+        }
+
+        // Course performance
+        $coursePerformance = Course::with(['enrollments.grades'])->get()->map(function ($course) {
+            $enrollments = $course->enrollments;
+            $averages = $enrollments->map(function ($enrollment) {
+                return $enrollment->averageGrade();
+            })->filter(function ($avg) {
+                return $avg > 0;
+            });
+
+            return [
+                'course' => $course->code . ' - ' . $course->name,
+                'average' => $averages->count() > 0 ? round($averages->average(), 2) : 0,
+                'students' => $enrollments->count(),
+            ];
+        })->sortByDesc('average')->take(10)->values();
+
+        // Attendance by course
+        $attendanceByCourse = Course::with(['enrollments.attendances' => function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }])->get()->map(function ($course) use ($startDate, $endDate) {
+            $totalAttendance = Attendance::whereHas('enrollment', function ($q) use ($course) {
+                $q->where('course_id', $course->id);
+            })->whereBetween('date', [$startDate, $endDate])->count();
+
+            $presentCount = Attendance::whereHas('enrollment', function ($q) use ($course) {
+                $q->where('course_id', $course->id);
+            })->whereBetween('date', [$startDate, $endDate])
+              ->where('status', 'present')->count();
+
+            return [
+                'course' => $course->code,
+                'total' => $totalAttendance,
+                'present' => $presentCount,
+                'percentage' => $totalAttendance > 0 ? round(($presentCount / $totalAttendance) * 100, 2) : 0,
+            ];
+        })->sortByDesc('percentage')->take(10)->values();
+
+        return response()->json([
+            'attendance_trends' => $attendanceTrends,
+            'grade_distribution' => $gradeDistribution,
+            'course_performance' => $coursePerformance,
+            'attendance_by_course' => $attendanceByCourse,
+        ]);
+    }
+
     public function attendance()
     {
         // Attendance statistics by course
