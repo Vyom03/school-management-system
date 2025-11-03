@@ -21,6 +21,28 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Export student list to CSV
   - Bulk import students via CSV upload
   - View enrollment statistics
+- **Fee Management**
+  - Create and manage fee structures (Tuition, Library, Sports, etc.)
+  - Assign fees to students individually or in bulk
+  - Record payments with multiple payment methods
+  - Track payment history and generate receipts
+  - View fee statistics and outstanding amounts
+  - Filter fees by status (pending, paid, partial, overdue)
+- **Calendar & Events Management**
+  - Create and manage academic events, holidays, and schedules
+  - Event types: Academic, Holiday, Event, Exam, Meeting
+  - Role-based visibility controls
+  - Monthly calendar view with event details
+- **PDF Report Generation**
+  - Generate attendance reports with date range filtering
+  - Create grade reports and student transcripts
+  - Download printable PDF reports
+  - Customized headers and footers
+- **Announcements**
+  - Create and publish announcements
+  - Pin important notices
+  - Audience targeting (All, Students, Teachers)
+  - Category system (General, Academic, Event, Urgent)
 - **System Management**
   - Manage users and roles
   - Access to all system features
@@ -45,9 +67,27 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - See individual assignment scores
   - Track course averages and letter grades
   - View instructor information
+  - Download academic transcript as PDF
+- **Fee Management**
+  - View all assigned fees
+  - Track payment history and receipts
+  - See outstanding balances
+  - Filter fees by status
+- **Attendance Tracking**
+  - View personal attendance records
+  - Track attendance percentage per course
+  - See attendance status breakdown
+- **Calendar & Events**
+  - View school calendar
+  - See upcoming events and holidays
+  - Filter events by type
 - **Course Information**
   - Access enrolled courses
   - View course details and descriptions
+- **Announcements**
+  - View published announcements
+  - See pinned notices
+  - Filter by category
 
 ### 🌐 Public Website
 - Modern, responsive design
@@ -237,6 +277,33 @@ After running the seeders, you can log in with these credentials:
 # Run tests (when available)
 php artisan test
 ```
+
+## 🆕 Recent Features
+
+### Fee Management System
+- Complete fee management with 8 default fee types
+- Payment tracking with receipt generation
+- Multi-payment method support (Cash, Bank Transfer, Check, Online, Card)
+- Fee assignment to students with flexible due dates
+- Payment history and outstanding balance tracking
+
+### Calendar & Events
+- Monthly calendar view
+- Event management with role-based visibility
+- Multiple event types (Academic, Holiday, Event, Exam, Meeting)
+- Edit events directly from calendar view (admin)
+
+### PDF Reports
+- Attendance reports with date range filtering
+- Grade reports by course or overall
+- Student academic transcripts
+- Professional PDF formatting with school branding
+
+### Enhanced Announcements
+- Rich announcement system with categories
+- Pinned announcements
+- Audience targeting
+- Published/draft status control
 
 ## 📝 License
 

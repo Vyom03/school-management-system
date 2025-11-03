@@ -389,16 +389,18 @@ The system is built to be highly customizable:
 - Easy to extend and customize
 
 ### **Future Roadmap** *(Potential Enhancements)*
-- 📅 Calendar and events management
 - 📚 Assignment submission system
 - 💬 Internal messaging system
 - 📊 Advanced analytics and charts
 - 👥 Parent portal
 - 📱 Mobile app (iOS/Android)
 - 🔔 Push notifications
+- 📖 Library management
+
+### **Recently Completed Features** ✅
+- 📅 Calendar and events management
 - 📄 PDF report generation
 - 💳 Fee management
-- 📖 Library management
 
 ---
 
