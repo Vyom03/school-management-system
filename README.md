@@ -221,13 +221,21 @@ After running the seeders, you can log in with these credentials:
 - **courses**: Course information
 - **enrollments**: Student course enrollments
 - **grades**: Student assignment grades
+- **attendances**: Student attendance records
+- **announcements**: School announcements and notices
+- **events**: Calendar events and academic schedules
+- **fee_structures**: Fee templates (Tuition, Library, etc.)
+- **fees**: Individual fees assigned to students
+- **payments**: Payment records with receipts
 
 ### Relationships
-- Users have many enrollments
+- Users have many enrollments, fees, and courses (as teacher)
 - Courses have many enrollments
-- Enrollments have many grades
+- Enrollments have many grades and attendances
 - Teachers have many courses
 - Courses belong to teachers
+- Fees belong to fee structures and students
+- Payments belong to fees
 
 ## 🎨 Features in Detail
 
