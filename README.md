@@ -357,6 +357,18 @@ php artisan test
 
 ## 🆕 Recent Features
 
+### Parent Portal System
+- Complete parent authentication and registration system
+- Secure registration code verification (8-character unique codes)
+- Admin interface to generate individual or bulk registration codes
+- Bulk PDF generation for entire classes with expiration dates
+- Parent dashboard to view all linked children
+- Comprehensive child information access (grades, attendance, fees)
+- Multi-child support for families
+- Separate authentication guard for enhanced security
+- Registration codes can be pre-approved with email addresses
+- One-time use codes with expiration dates
+
 ### Assignment Submission System
 - Complete assignment management for teachers and admins
 - Student submission portal with file upload support
