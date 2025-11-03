@@ -45,6 +45,25 @@
                         <x-nav-link :href="route('admin.fees.index')" :active="request()->routeIs('admin.fees.*')">
                             {{ __('Fees') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.assignments.index')" :active="request()->routeIs('admin.assignments.*')">
+                            {{ __('Assignments') }}
+                        </x-nav-link>
+                    @endif
+                    
+                    @if(Auth::user()->hasRole('teacher'))
+                        <x-nav-link :href="route('teacher.assignments.index')" :active="request()->routeIs('teacher.assignments.*')">
+                            <span class="flex items-center">
+                                {{ __('Assignments') }}
+                                @php
+                                    $ungradedCount = Auth::user()->ungraded_submissions_count;
+                                @endphp
+                                @if($ungradedCount > 0)
+                                    <span class="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white transform translate-y-0 bg-red-600 rounded-full">
+                                        {{ $ungradedCount }}
+                                    </span>
+                                @endif
+                            </span>
+                        </x-nav-link>
                     @endif
                     
                     @if(Auth::user()->hasRole('student'))
@@ -56,6 +75,19 @@
                         </x-nav-link>
                         <x-nav-link :href="route('student.fees.index')" :active="request()->routeIs('student.fees.*')">
                             {{ __('My Fees') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('student.assignments.index')" :active="request()->routeIs('student.assignments.*')">
+                            <span class="flex items-center">
+                                {{ __('Assignments') }}
+                                @php
+                                    $gradedCount = Auth::user()->graded_assignments_count;
+                                @endphp
+                                @if($gradedCount > 0)
+                                    <span class="ml-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white transform translate-y-0 bg-green-600 rounded-full">
+                                        {{ $gradedCount }}
+                                    </span>
+                                @endif
+                            </span>
                         </x-nav-link>
                     @endif
                 </div>
@@ -143,6 +175,25 @@
                 <x-responsive-nav-link :href="route('admin.fees.index')" :active="request()->routeIs('admin.fees.*')">
                     {{ __('Fees') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.assignments.index')" :active="request()->routeIs('admin.assignments.*')">
+                    {{ __('Assignments') }}
+                </x-responsive-nav-link>
+            @endif
+            
+            @if(Auth::user()->hasRole('teacher'))
+                <x-responsive-nav-link :href="route('teacher.assignments.index')" :active="request()->routeIs('teacher.assignments.*')">
+                    <span class="flex items-center justify-between w-full">
+                        <span>{{ __('Assignments') }}</span>
+                        @php
+                            $ungradedCount = Auth::user()->ungraded_submissions_count;
+                        @endphp
+                        @if($ungradedCount > 0)
+                            <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                                {{ $ungradedCount }}
+                            </span>
+                        @endif
+                    </span>
+                </x-responsive-nav-link>
             @endif
 
             @if(Auth::user()->hasRole('student'))
@@ -154,6 +205,19 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('student.fees.index')" :active="request()->routeIs('student.fees.*')">
                     {{ __('My Fees') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('student.assignments.index')" :active="request()->routeIs('student.assignments.*')">
+                    <span class="flex items-center justify-between w-full">
+                        <span>{{ __('Assignments') }}</span>
+                        @php
+                            $gradedCount = Auth::user()->graded_assignments_count;
+                        @endphp
+                        @if($gradedCount > 0)
+                            <span class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-green-600 rounded-full">
+                                {{ $gradedCount }}
+                            </span>
+                        @endif
+                    </span>
                 </x-responsive-nav-link>
             @endif
         </div>

@@ -38,6 +38,12 @@ Route::middleware('auth')->group(function () {
     
     // Calendar (all authenticated users)
     Route::get('/calendar', [App\Http\Controllers\CalendarController::class, 'index'])->name('calendar.index');
+    
+    // Submission routes (shared)
+    Route::post('/assignments/{assignment}/submissions', [App\Http\Controllers\SubmissionController::class, 'store'])->name('submissions.store');
+    Route::put('/submissions/{submission}', [App\Http\Controllers\SubmissionController::class, 'update'])->name('submissions.update');
+    Route::post('/submissions/{submission}/grade', [App\Http\Controllers\SubmissionController::class, 'grade'])->name('submissions.grade');
+    Route::get('/submissions/files/{file}/download', [App\Http\Controllers\SubmissionController::class, 'downloadFile'])->name('submissions.files.download');
 });
 
 // Students management (Teacher and Admin)
@@ -85,6 +91,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Events management
     Route::resource('events', App\Http\Controllers\Admin\EventsController::class);
     
+    // Assignments management
+    Route::resource('assignments', App\Http\Controllers\Admin\AssignmentController::class);
+    
     // Fee management
     Route::get('/fees', [App\Http\Controllers\Admin\FeeController::class, 'index'])->name('fees.index');
     
@@ -115,6 +124,9 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->name('teacher.')
     Route::get('/attendance', [App\Http\Controllers\Teacher\AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/{course}', [App\Http\Controllers\Teacher\AttendanceController::class, 'show'])->name('attendance.show');
     Route::post('/attendance/{course}', [App\Http\Controllers\Teacher\AttendanceController::class, 'store'])->name('attendance.store');
+    
+    // Assignments management
+    Route::resource('assignments', App\Http\Controllers\Teacher\AssignmentController::class);
 });
 
 // Student routes
@@ -126,6 +138,10 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')
     // Fees
     Route::get('/fees', [App\Http\Controllers\Student\FeeController::class, 'index'])->name('fees.index');
     Route::get('/fees/{fee}', [App\Http\Controllers\Student\FeeController::class, 'show'])->name('fees.show');
+    
+    // Assignments
+    Route::get('/assignments', [App\Http\Controllers\Student\AssignmentController::class, 'index'])->name('assignments.index');
+    Route::get('/assignments/{assignment}', [App\Http\Controllers\Student\AssignmentController::class, 'show'])->name('assignments.show');
 });
 
 require __DIR__.'/auth.php';

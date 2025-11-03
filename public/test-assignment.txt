@@ -1,0 +1,27 @@
+Test Assignment Submission
+===========================
+
+Student Name: [Your Name]
+Course: Test Course
+Date: 2025-11-03
+
+This is a test file to verify the assignment submission system.
+
+Assignment Instructions:
+- Download this file
+- Upload it through the student assignment submission interface
+- Verify that the file uploads successfully
+- Check that you can download it back as a teacher
+
+Test Content:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+
+Nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui 
+officia deserunt mollit anim id est laborum.
+
+End of Test File

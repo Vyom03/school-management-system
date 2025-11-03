@@ -63,6 +63,55 @@ class User extends Authenticatable
     }
 
     /**
+     * Get assignments created by this teacher
+     */
+    public function createdAssignments()
+    {
+        return $this->hasMany(\App\Models\Assignment::class, 'teacher_id');
+    }
+
+    /**
+     * Get submissions by this student
+     */
+    public function submissions()
+    {
+        return $this->hasMany(\App\Models\Submission::class, 'student_id');
+    }
+
+    /**
+     * Get count of ungraded submissions for teacher
+     */
+    public function getUngradedSubmissionsCountAttribute()
+    {
+        if (!$this->hasRole('teacher')) {
+            return 0;
+        }
+
+        return \App\Models\Submission::whereHas('assignment', function ($query) {
+                $query->where('teacher_id', $this->id);
+            })
+            ->where('status', 'submitted')
+            ->whereNull('score')
+            ->count();
+    }
+
+    /**
+     * Get count of newly graded assignments for student (unviewed)
+     */
+    public function getGradedAssignmentsCountAttribute()
+    {
+        if (!$this->hasRole('student')) {
+            return 0;
+        }
+
+        return \App\Models\Submission::where('student_id', $this->id)
+            ->whereIn('status', ['graded', 'returned'])
+            ->whereNotNull('score')
+            ->whereNull('viewed_at')
+            ->count();
+    }
+
+    /**
      * Get the grade level label
      */
     public function getGradeLevelLabelAttribute()

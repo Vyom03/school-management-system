@@ -21,6 +21,11 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Export student list to CSV
   - Bulk import students via CSV upload
   - View enrollment statistics
+- **Assignment Management**
+  - Create and manage assignments across all courses
+  - Assign teachers to specific assignments
+  - View all submissions and grades
+  - Full administrative oversight
 - **Fee Management**
   - Create and manage fee structures (Tuition, Library, Sports, etc.)
   - Assign fees to students individually or in bulk
@@ -33,11 +38,12 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Event types: Academic, Holiday, Event, Exam, Meeting
   - Role-based visibility controls
   - Monthly calendar view with event details
+  - Edit events directly from calendar view
 - **PDF Report Generation**
   - Generate attendance reports with date range filtering
   - Create grade reports and student transcripts
   - Download printable PDF reports
-  - Customized headers and footers
+  - Customized headers and footers with school branding
 - **Announcements**
   - Create and publish announcements
   - Pin important notices
@@ -47,6 +53,7 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Manage users and roles
   - Access to all system features
   - View comprehensive system analytics
+  - Customize application name and branding
 
 ### 👨‍🏫 Teacher Features
 - **Course Management**
@@ -57,6 +64,14 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Edit existing grades
   - View student averages and letter grades
   - Search students within courses
+- **Assignment Management**
+  - Create and manage assignments for courses
+  - Set due dates and maximum scores
+  - Accept file submissions and text content
+  - Download student submission files
+  - Grade submissions with feedback
+  - View ungraded submissions with notification badges
+  - Automatic gradebook integration
 - **Student Directory**
   - View all students
   - Export student data to CSV
@@ -68,6 +83,13 @@ A comprehensive school management system built with Laravel 10, featuring role-b
   - Track course averages and letter grades
   - View instructor information
   - Download academic transcript as PDF
+- **Assignment Submission**
+  - View assignments for enrolled courses
+  - Submit assignments with file uploads and text content
+  - Track submission status (draft, submitted, graded)
+  - Receive feedback and grades
+  - View graded assignments with notification badges
+  - Automatic notifications for graded work
 - **Fee Management**
   - View all assigned fees
   - Track payment history and receipts
@@ -227,15 +249,21 @@ After running the seeders, you can log in with these credentials:
 - **fee_structures**: Fee templates (Tuition, Library, etc.)
 - **fees**: Individual fees assigned to students
 - **payments**: Payment records with receipts
+- **assignments**: Course assignments with due dates and instructions
+- **submissions**: Student assignment submissions with content and files
+- **submission_files**: Uploaded files for assignments
 
 ### Relationships
-- Users have many enrollments, fees, and courses (as teacher)
-- Courses have many enrollments
+- Users have many enrollments, fees, courses (as teacher), assignments (as teacher), and submissions (as student)
+- Courses have many enrollments, assignments, and events
 - Enrollments have many grades and attendances
-- Teachers have many courses
+- Assignments have many submissions
+- Submissions have many files
+- Teachers have many courses and assignments
 - Courses belong to teachers
 - Fees belong to fee structures and students
 - Payments belong to fees
+- Submissions automatically create grades in the gradebook
 
 ## 🎨 Features in Detail
 
@@ -288,6 +316,19 @@ php artisan test
 
 ## 🆕 Recent Features
 
+### Assignment Submission System
+- Complete assignment management for teachers and admins
+- Student submission portal with file upload support
+- Multiple file type support with size limits
+- Draft saving and final submission workflow
+- Inline grading interface for teachers
+- Download submitted files directly
+- Automatic gradebook integration - grades from assignments automatically appear in student gradebooks
+- View tracking - notification badges disappear after viewing graded assignments
+- Real-time notification badges:
+  - Teachers see count of ungraded submissions
+  - Students see count of newly graded assignments
+
 ### Fee Management System
 - Complete fee management with 8 default fee types
 - Payment tracking with receipt generation
@@ -300,18 +341,25 @@ php artisan test
 - Event management with role-based visibility
 - Multiple event types (Academic, Holiday, Event, Exam, Meeting)
 - Edit events directly from calendar view (admin)
+- Color-coded event display
 
 ### PDF Reports
 - Attendance reports with date range filtering
 - Grade reports by course or overall
 - Student academic transcripts
 - Professional PDF formatting with school branding
+- Improved pagination to prevent content splitting
 
 ### Enhanced Announcements
 - Rich announcement system with categories
 - Pinned announcements
 - Audience targeting
 - Published/draft status control
+
+### Customization & Branding
+- Customizable application name via environment variable
+- Custom favicon support (SVG and ICO formats)
+- School branding throughout the application
 
 ## 📝 License
 

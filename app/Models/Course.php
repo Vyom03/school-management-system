@@ -38,6 +38,11 @@ class Course extends Model
             ->withTimestamps();
     }
 
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
     /**
      * Get the grade level label
      */
