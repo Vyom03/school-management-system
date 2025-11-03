@@ -35,6 +35,9 @@ Route::middleware('auth')->group(function () {
     // Announcements (all authenticated users)
     Route::get('/announcements', [App\Http\Controllers\AnnouncementsController::class, 'index'])->name('announcements.index');
     Route::get('/announcements/{announcement}', [App\Http\Controllers\AnnouncementsController::class, 'show'])->name('announcements.show');
+    
+    // Calendar (all authenticated users)
+    Route::get('/calendar', [App\Http\Controllers\CalendarController::class, 'index'])->name('calendar.index');
 });
 
 // Students management (Teacher and Admin)
@@ -63,6 +66,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reports', [App\Http\Controllers\Admin\ReportsController::class, 'index'])->name('reports.index');
     Route::get('/reports/attendance', [App\Http\Controllers\Admin\ReportsController::class, 'attendance'])->name('reports.attendance');
     Route::get('/reports/grades', [App\Http\Controllers\Admin\ReportsController::class, 'grades'])->name('reports.grades');
+    Route::get('/reports/attendance/pdf', [App\Http\Controllers\Admin\ReportsController::class, 'attendancePdf'])->name('reports.attendance.pdf');
+    Route::get('/reports/grades/pdf', [App\Http\Controllers\Admin\ReportsController::class, 'gradesPdf'])->name('reports.grades.pdf');
+    Route::get('/reports/transcript/{student}', [App\Http\Controllers\Admin\ReportsController::class, 'studentTranscriptPdf'])->name('reports.transcript.pdf');
     
     // Settings
     Route::view('/settings', 'admin.settings.index')->name('settings');
@@ -71,9 +77,31 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/attendance', [App\Http\Controllers\Admin\AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/attendance/course/{course}', [App\Http\Controllers\Admin\AttendanceController::class, 'show'])->name('attendance.show');
     Route::get('/attendance/student/{student}', [App\Http\Controllers\Admin\AttendanceController::class, 'studentReport'])->name('attendance.student');
+    Route::get('/attendance/student/{student}/pdf', [App\Http\Controllers\Admin\AttendanceController::class, 'studentReportPdf'])->name('attendance.student.pdf');
     
     // Announcements management
     Route::resource('announcements', App\Http\Controllers\Admin\AnnouncementsController::class);
+    
+    // Events management
+    Route::resource('events', App\Http\Controllers\Admin\EventsController::class);
+    
+    // Fee management
+    Route::get('/fees', [App\Http\Controllers\Admin\FeeController::class, 'index'])->name('fees.index');
+    
+    // Fee structures (must be before /fees/{fee} to avoid route conflicts)
+    Route::get('/fees/structures', [App\Http\Controllers\Admin\FeeController::class, 'structures'])->name('fees.structures');
+    Route::post('/fees/structures', [App\Http\Controllers\Admin\FeeController::class, 'storeStructure'])->name('fees.structures.store');
+    Route::put('/fees/structures/{feeStructure}', [App\Http\Controllers\Admin\FeeController::class, 'updateStructure'])->name('fees.structures.update');
+    Route::delete('/fees/structures/{feeStructure}', [App\Http\Controllers\Admin\FeeController::class, 'destroyStructure'])->name('fees.structures.destroy');
+    
+    // Fee assign route (must be before /fees/{fee})
+    Route::post('/fees/assign', [App\Http\Controllers\Admin\FeeController::class, 'assignFee'])->name('fees.assign');
+    
+    // Individual fee routes (keep these last)
+    Route::get('/fees/{fee}', [App\Http\Controllers\Admin\FeeController::class, 'show'])->name('fees.show');
+    Route::put('/fees/{fee}', [App\Http\Controllers\Admin\FeeController::class, 'update'])->name('fees.update');
+    Route::delete('/fees/{fee}', [App\Http\Controllers\Admin\FeeController::class, 'destroy'])->name('fees.destroy');
+    Route::post('/fees/{fee}/payment', [App\Http\Controllers\Admin\FeeController::class, 'recordPayment'])->name('fees.payment');
 });
 
 // Teacher routes
@@ -92,7 +120,12 @@ Route::middleware(['auth', 'role:teacher'])->prefix('teacher')->name('teacher.')
 // Student routes
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
     Route::get('/grades', [App\Http\Controllers\Student\GradesController::class, 'index'])->name('grades.index');
+    Route::get('/grades/transcript/pdf', [App\Http\Controllers\Student\GradesController::class, 'transcriptPdf'])->name('grades.transcript.pdf');
     Route::get('/attendance', [App\Http\Controllers\Student\AttendanceController::class, 'index'])->name('attendance.index');
+    
+    // Fees
+    Route::get('/fees', [App\Http\Controllers\Student\FeeController::class, 'index'])->name('fees.index');
+    Route::get('/fees/{fee}', [App\Http\Controllers\Student\FeeController::class, 'show'])->name('fees.show');
 });
 
 require __DIR__.'/auth.php';

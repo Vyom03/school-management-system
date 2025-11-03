@@ -19,6 +19,9 @@
                     <x-nav-link :href="route('announcements.index')" :active="request()->routeIs('announcements.*')">
                         {{ __('Announcements') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                        {{ __('Calendar') }}
+                    </x-nav-link>
                     
                     @if(Auth::user()->hasRole('teacher'))
                         <x-nav-link :href="route('teacher.gradebook.index')" :active="request()->routeIs('teacher.gradebook.*')">
@@ -39,6 +42,9 @@
                         <x-nav-link :href="route('admin.attendance.index')" :active="request()->routeIs('admin.attendance.*')">
                             {{ __('Attendance') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.fees.index')" :active="request()->routeIs('admin.fees.*')">
+                            {{ __('Fees') }}
+                        </x-nav-link>
                     @endif
                     
                     @if(Auth::user()->hasRole('student'))
@@ -47,6 +53,9 @@
                         </x-nav-link>
                         <x-nav-link :href="route('student.attendance.index')" :active="request()->routeIs('student.attendance.*')">
                             {{ __('Attendance') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('student.fees.index')" :active="request()->routeIs('student.fees.*')">
+                            {{ __('My Fees') }}
                         </x-nav-link>
                     @endif
                 </div>
@@ -108,6 +117,9 @@
             <x-responsive-nav-link :href="route('announcements.index')" :active="request()->routeIs('announcements.*')">
                 {{ __('Announcements') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('calendar.index')" :active="request()->routeIs('calendar.*')">
+                {{ __('Calendar') }}
+            </x-responsive-nav-link>
             
             @if(Auth::user()->hasRole('teacher'))
                 <x-responsive-nav-link :href="route('teacher.gradebook.index')" :active="request()->routeIs('teacher.gradebook.*')">
@@ -128,14 +140,20 @@
                 <x-responsive-nav-link :href="route('admin.attendance.index')" :active="request()->routeIs('admin.attendance.*')">
                     {{ __('Attendance') }}
                 </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.fees.index')" :active="request()->routeIs('admin.fees.*')">
+                    {{ __('Fees') }}
+                </x-responsive-nav-link>
             @endif
-            
+
             @if(Auth::user()->hasRole('student'))
                 <x-responsive-nav-link :href="route('student.grades.index')" :active="request()->routeIs('student.grades.*')">
                     {{ __('My Grades') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('student.attendance.index')" :active="request()->routeIs('student.attendance.*')">
                     {{ __('Attendance') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('student.fees.index')" :active="request()->routeIs('student.fees.*')">
+                    {{ __('My Fees') }}
                 </x-responsive-nav-link>
             @endif
         </div>

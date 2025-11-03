@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             EnrollmentSeeder::class,
             AttendanceSeeder::class,
             AnnouncementSeeder::class,
+            FeeStructureSeeder::class,
+            FeeSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

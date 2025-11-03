@@ -10,6 +10,7 @@ use App\Models\Attendance;
 use App\Models\Grade;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportsController extends Controller
 {
@@ -89,5 +90,101 @@ class ReportsController extends Controller
         });
 
         return view('admin.reports.grades', compact('gradeData'));
+    }
+
+    public function attendancePdf(Request $request)
+    {
+        $courseId = $request->input('course_id');
+        $date = $request->input('date', today()->toDateString());
+        
+        if ($courseId) {
+            $course = Course::with(['enrollments.student', 'enrollments.attendances' => function ($query) use ($date) {
+                $query->where('date', $date);
+            }])->findOrFail($courseId);
+            
+            $enrollments = $course->enrollments;
+            $selectedDate = Carbon::parse($date);
+            
+            $pdf = Pdf::loadView('admin.reports.pdf.attendance-course', compact('course', 'enrollments', 'selectedDate'));
+            return $pdf->download("attendance-{$course->code}-{$date}.pdf");
+        }
+        
+        // Overall attendance report with date range
+        $startDate = $request->input('start_date', now()->subDays(30)->format('Y-m-d'));
+        $endDate = $request->input('end_date', now()->format('Y-m-d'));
+        
+        $courses = Course::with(['enrollments.attendances'])->get();
+        $attendanceData = $courses->map(function ($course) use ($startDate, $endDate) {
+            $totalAttendance = Attendance::whereHas('enrollment', function ($query) use ($course) {
+                $query->where('course_id', $course->id);
+            })->whereBetween('date', [$startDate, $endDate])->count();
+
+            $presentCount = Attendance::whereHas('enrollment', function ($query) use ($course) {
+                $query->where('course_id', $course->id);
+            })->whereBetween('date', [$startDate, $endDate])
+              ->where('status', 'present')->count();
+
+            $percentage = $totalAttendance > 0 ? ($presentCount / $totalAttendance) * 100 : 0;
+
+            return [
+                'course' => $course,
+                'total' => $totalAttendance,
+                'present' => $presentCount,
+                'percentage' => round($percentage, 2),
+            ];
+        });
+        
+        $dateRange = "{$startDate}_to_{$endDate}";
+        $pdf = Pdf::loadView('admin.reports.pdf.attendance-overview', compact('attendanceData', 'startDate', 'endDate'));
+        return $pdf->download("attendance-overview-{$dateRange}.pdf");
+    }
+
+    public function gradesPdf(Request $request)
+    {
+        $courseId = $request->input('course_id');
+        
+        if ($courseId) {
+            $course = Course::with(['enrollments.student', 'enrollments.grades'])->findOrFail($courseId);
+            $enrollments = $course->enrollments;
+            
+            $pdf = Pdf::loadView('admin.reports.pdf.grades-course', compact('course', 'enrollments'));
+            return $pdf->download("grades-{$course->code}.pdf");
+        }
+        
+        // Overall grades report
+        $courses = Course::with(['enrollments.grades'])->get();
+        $gradeData = $courses->map(function ($course) {
+            $enrollments = $course->enrollments;
+            $averages = $enrollments->map(function ($enrollment) {
+                return $enrollment->averageGrade();
+            })->filter(function ($avg) {
+                return $avg > 0;
+            });
+
+            return [
+                'course' => $course,
+                'students' => $enrollments->count(),
+                'average' => $averages->count() > 0 ? round($averages->average(), 2) : 0,
+                'highest' => $averages->count() > 0 ? round($averages->max(), 2) : 0,
+                'lowest' => $averages->count() > 0 ? round($averages->min(), 2) : 0,
+            ];
+        });
+        
+        $pdf = Pdf::loadView('admin.reports.pdf.grades-overview', compact('gradeData'));
+        return $pdf->download('grades-overview-'.today()->format('Y-m-d').'.pdf');
+    }
+
+    public function studentTranscriptPdf(User $student)
+    {
+        if (!$student->hasRole('student')) {
+            abort(404, 'Student not found');
+        }
+
+        $enrollments = $student->enrollments()
+            ->with(['course.teacher', 'grades'])
+            ->get();
+
+        $pdf = Pdf::loadView('admin.reports.pdf.student-transcript', compact('student', 'enrollments'));
+        return $pdf->download("transcript-{$student->name}-".today()->format('Y-m-d').'.pdf');
     }
 }

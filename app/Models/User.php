@@ -55,6 +55,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get fees for this student
+     */
+    public function fees()
+    {
+        return $this->hasMany(Fee::class, 'student_id');
+    }
+
+    /**
      * Get the grade level label
      */
     public function getGradeLevelLabelAttribute()

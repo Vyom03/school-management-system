@@ -14,7 +14,41 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Course Attendance Statistics</h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Course Attendance Statistics</h3>
+                    </div>
+                    
+                    <!-- Date Range Selection for PDF -->
+                    <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">Download PDF Report</h4>
+                        <form method="GET" action="{{ route('admin.reports.attendance.pdf') }}" class="flex flex-wrap gap-4 items-end">
+                            <div class="flex-1 min-w-[200px]">
+                                <label for="start_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Start Date</label>
+                                <input type="date" 
+                                       id="start_date" 
+                                       name="start_date" 
+                                       value="{{ request('start_date', now()->subDays(30)->format('Y-m-d')) }}"
+                                       class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div class="flex-1 min-w-[200px]">
+                                <label for="end_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">End Date</label>
+                                <input type="date" 
+                                       id="end_date" 
+                                       name="end_date" 
+                                       value="{{ request('end_date', now()->format('Y-m-d')) }}"
+                                       class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <button type="submit" 
+                                        class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-sm transition">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                    Download PDF
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     
                     @if($attendanceData->count() > 0)
                         <div class="overflow-x-auto">

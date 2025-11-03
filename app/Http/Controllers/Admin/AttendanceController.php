@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AttendanceController extends Controller
 {
@@ -67,5 +68,23 @@ class AttendanceController extends Controller
         });
 
         return view('admin.attendance.student-report', compact('student', 'enrollments'));
+    }
+
+    public function studentReportPdf(User $student)
+    {
+        if (!$student->hasRole('student')) {
+            abort(404, 'Student not found');
+        }
+
+        $enrollments = $student->enrollments()
+            ->with(['course.teacher', 'attendances'])
+            ->get();
+
+        $enrollments->each(function ($enrollment) {
+            $enrollment->attendance_stats = $enrollment->attendanceStats();
+        });
+
+        $pdf = Pdf::loadView('admin.attendance.pdf.student-report', compact('student', 'enrollments'));
+        return $pdf->download("attendance-report-{$student->name}-".today()->format('Y-m-d').'.pdf');
     }
 }

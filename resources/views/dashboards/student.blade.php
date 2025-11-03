@@ -17,11 +17,21 @@
 
             <!-- Quick Stats -->
             @php
-                $myEnrollments = Auth::user()->enrollments;
+                $myEnrollments = Auth::user()->enrollments()->with(['grades', 'course.teacher', 'attendances'])->get();
                 $totalGrades = $myEnrollments->flatMap(function($enrollment) {
                     return $enrollment->grades;
                 });
-                $averageGrade = $totalGrades->count() > 0 ? round($totalGrades->avg('grade'), 1) : null;
+                
+                // Calculate average percentage from all grades
+                $averageGrade = null;
+                if ($totalGrades->count() > 0) {
+                    $totalScore = $totalGrades->sum('score');
+                    $totalMaxScore = $totalGrades->sum('max_score');
+                    if ($totalMaxScore > 0) {
+                        $averageGrade = round(($totalScore / $totalMaxScore) * 100, 1);
+                    }
+                }
+                
                 $attendanceCount = \App\Models\Attendance::whereIn('enrollment_id', $myEnrollments->pluck('id'))
                     ->where('status', 'present')
                     ->count();
@@ -118,7 +128,7 @@
 
             <!-- Announcements -->
             @php
-                $announcements = \App\Models\Announcement::where('is_published', true)
+                $announcements = \App\Models\Announcement::published()
                     ->orderBy('created_at', 'desc')
                     ->limit(3)
                     ->get();
